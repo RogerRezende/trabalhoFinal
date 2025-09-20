@@ -18,6 +18,18 @@ describe('User Controller', () => {
             expect(response.status).to.equal(400);
             expect(response.body).to.have.property('message', 'Usuário e senha são obrigatórios');
         });
+
+        it('Without username and return 400', async () => {
+            const response = await request(app)
+                .post('/users/register')
+                .send({
+                    password: "batman"
+                });
+
+            expect(response.status).to.equal(400);
+            expect(response.body).to.have.property('message', 'Usuário e senha são obrigatórios');
+        });
+
         it('Using mocks: Without password and return 400', async () => {
             const transferServiceMock = sinon.stub(userService, 'registerUser')
             transferServiceMock.throws(new Error('Usuário e senha obrigatórios'));
@@ -32,15 +44,6 @@ describe('User Controller', () => {
             expect(response.body).to.have.property('message', 'Usuário e senha são obrigatórios');
 
             sinon.restore();
-            /* const response = await request(app)
-                .post('/users/register')
-                .send({
-                    username: "Selina",
-                    password: "123"
-                });
-
-            expect(response.status).to.equal(201);
-            expect(response.body).to.have.property('username'); */
         });
     });
 });
