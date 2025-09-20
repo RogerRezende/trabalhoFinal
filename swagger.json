@@ -1,0 +1,121 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Revistas em Quadrinhos",
+    "version": "1.0.0",
+    "description": "API para registro e consulta de usuários e revistas em quadrinhos."
+  },
+  "paths": {
+    "/users/register": {
+      "post": {
+        "summary": "Registrar novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Usuário registrado" },
+          "400": { "description": "Usuário já existe ou dados inválidos" }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "Login do usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login bem-sucedido, retorna token" },
+          "401": { "description": "Credenciais inválidas" }
+        }
+      }
+    },
+    "/users/{username}": {
+      "get": {
+        "summary": "Consultar usuário por username",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Usuário encontrado" },
+          "404": { "description": "Usuário não encontrado" }
+        }
+      }
+    },
+    "/comics/register": {
+      "post": {
+        "summary": "Registrar nova revista em quadrinho",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "publisher": { "type": "string" },
+                  "licensor": { "type": "string" },
+                  "genre": { "type": "string" },
+                  "price": { "type": "number" }
+                },
+                "required": ["name", "publisher", "licensor", "genre", "price"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Revista registrada" },
+          "400": { "description": "Revista já registrada ou dados inválidos" },
+          "401": { "description": "Token não informado ou inválido" }
+        }
+      }
+    },
+    "/comics": {
+      "get": {
+        "summary": "Listar todas as revistas em quadrinho",
+        "responses": {
+          "200": { "description": "Lista de revistas" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

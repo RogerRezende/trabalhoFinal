@@ -1,0 +1,23 @@
+{
+  "name": "trabalhofinal",
+  "version": "1.0.0",
+  "description": "Esta API permite o registro e login de usuários, além do cadastro e consulta de revistas em quadrinhos. Utiliza autenticação JWT e armazena dados em memória.",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha test/**/*.test.js --timeout 10000",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Roger Rezende Ribeiro Santos",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "chai": "^6.0.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mocha": "^11.7.2",
+    "sinon": "^21.0.0",
+    "supertest": "^7.1.4",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
