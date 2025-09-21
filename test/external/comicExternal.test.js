@@ -130,7 +130,7 @@ describe('Comic External', () => {
                 .get('/comics');
 
             expect(response.status).to.equal(200);
-            expect(response.body[0]).to.have.property('name', 'Absolute Batman 1');
+            expect(response.body[0]).to.have.property('name', 'Absolute Batman 2');
             expect(response.body[0]).to.have.property('publisher', 'Panini');
             expect(response.body[0]).to.have.property('licensor', 'DC');
             expect(response.body[0]).to.have.property('genre', 'Super Hero');
