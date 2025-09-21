@@ -57,5 +57,30 @@ describe('User Controller', () => {
             expect(response.status).to.equal(401);
             expect(response.body).to.have.property('message', 'Token não informado');
         });
+
+        it('Register comic exists and return 400', async () => {
+            const responseLogin = await request(servidor)
+                .post('/users/login')
+                .send({
+                    username: "Bruce",
+                    password: "batman"
+                });
+
+            const token = responseLogin.body.token;
+
+            const response = await request(servidor)
+                .post('/comics/register')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    name: "Absolute Batman 1",
+                    publisher: "Panini",
+                    licensor: "DC",
+                    genre: "Super Hero",
+                    price: 19.90
+                });
+
+            expect(response.status).to.equal(400);
+            expect(response.body).to.have.property('message', 'Revista já existe');
+        });
     });
 });
