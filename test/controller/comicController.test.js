@@ -237,5 +237,123 @@ describe('Comic Controller', () => {
             sinon.restore();
         });
     });
+
+    describe('GET /comics', () => {
+        it('List comics successfully and return 200 and confirm is array', async () => {
+            const response = await request(app)
+                .get('/comics');
+
+            expect(response.status).to.equal(200);
+            expect(response.body).to.be.an('array');
+        });
+
+        it('List comics successfully and return 200 and confirm is not empty', async () => {
+            const response = await request(app)
+                .get('/comics');
+
+            expect(response.status).to.equal(200);
+            expect(response.body).to.be.an('array').that.is.not.empty;
+        });
+
+        it('List comics successfully and return 200 and confirm first comic properties', async () => {
+            const response = await request(app)
+                .get('/comics');
+
+            expect(response.status).to.equal(200);
+            expect(response.body[0]).to.have.property('name', 'Absolute Batman 2');
+            expect(response.body[0]).to.have.property('publisher', 'Panini');
+            expect(response.body[0]).to.have.property('licensor', 'DC');
+            expect(response.body[0]).to.have.property('genre', 'Super Hero');
+            expect(response.body[0]).to.have.property('price', 19.90);
+        });
+
+        it('Using mocks: List comics successfully and return 200 and confirm is array', async () => {
+            const transferServiceMock = sinon.stub(comicService, 'getComics')
+            transferServiceMock.returns([{
+                 name: "Absolute Batman 1",
+                 publisher: "Panini",
+                 licensor: "DC",
+                 genre: "Super Hero",
+                 price: 19.90
+            }]);
+
+            const responseLogin = await request(app)
+                .post('/users/login')
+                .send({
+                    username: "Bruce",
+                    password: "batman"
+                });
+
+            const token = responseLogin.body.token;
+
+            const response = await request(app)
+                .get('/comics');
+
+            expect(response.status).to.equal(200);
+            expect(response.body).to.be.an('array');
+
+            sinon.restore();
+        });
+
+        it('Using mocks: List comics successfully and return 200 and confirm is not empty', async () => {
+            const transferServiceMock = sinon.stub(comicService, 'getComics')
+            transferServiceMock.returns([{
+                 name: "Absolute Batman 1",
+                 publisher: "Panini",
+                 licensor: "DC",
+                 genre: "Super Hero",
+                 price: 19.90
+            }]);
+
+            const responseLogin = await request(app)
+                .post('/users/login')
+                .send({
+                    username: "Bruce",
+                    password: "batman"
+                });
+
+            const token = responseLogin.body.token;
+
+            const response = await request(app)
+                .get('/comics');
+
+            expect(response.status).to.equal(200);
+            expect(response.body).to.be.an('array').that.is.not.empty;
+
+            sinon.restore();
+        });
+
+        it('Using mocks: List comics successfully and return 200 and confirm first comic properties', async () => {
+            const transferServiceMock = sinon.stub(comicService, 'getComics')
+            transferServiceMock.returns([{
+                 name: "Absolute Batman 1",
+                 publisher: "Panini",
+                 licensor: "DC",
+                 genre: "Super Hero",
+                 price: 19.90
+            }]);
+
+            const responseLogin = await request(app)
+                .post('/users/login')
+                .send({
+                    username: "Bruce",
+                    password: "batman"
+                });
+
+            const token = responseLogin.body.token;
+
+            const response = await request(app)
+                .get('/comics');
+
+            expect(response.status).to.equal(200);
+            expect(response.body[0]).to.have.property('name', 'Absolute Batman 1');
+            expect(response.body[0]).to.have.property('publisher', 'Panini');
+            expect(response.body[0]).to.have.property('licensor', 'DC');
+            expect(response.body[0]).to.have.property('genre', 'Super Hero');
+            expect(response.body[0]).to.have.property('price', 19.90);
+
+            sinon.restore();
+        });
+    });
 });
 
