@@ -19,7 +19,7 @@ describe('User Controller', () => {
                 .post('/comics/register')
                 .set('Authorization', `Bearer ${token}`)
                 .send({
-                    name: "Absolute Batman 2",
+                    name: "Absolute Batman 1",
                     publisher: "Panini",
                     licensor: "DC",
                     genre: "Super Hero",
@@ -27,7 +27,7 @@ describe('User Controller', () => {
                 });
 
             expect(response.status).to.equal(201);
-            expect(response.body).to.have.property('name', 'Absolute Batman 2');
+            expect(response.body).to.have.property('name', 'Absolute Batman 1');
             expect(response.body).to.have.property('publisher', 'Panini');
             expect(response.body).to.have.property('licensor', 'DC');
             expect(response.body).to.have.property('genre', 'Super Hero');
