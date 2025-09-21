@@ -31,12 +31,12 @@ describe('User Controller', () => {
             const response = await request(servidor)
                 .post('/users/register')
                 .send({
-                    username: "Dick",
-                    password: "asanoturna"
+                    username: "Selina",
+                    password: "mulhergato"
                 });
 
             expect(response.status).to.equal(201);
-            expect(response.body).to.have.property('username', 'Dick');
+            expect(response.body).to.have.property('username', 'Selina');
         });
 
         it('User exists and return 400', async () => {
