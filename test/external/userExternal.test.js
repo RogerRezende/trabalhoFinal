@@ -36,7 +36,7 @@ describe('User Controller', () => {
                 });
 
             expect(response.status).to.equal(201);
-            expect(response.body).to.have.property('username', 'Bruce');
+            expect(response.body).to.have.property('username', 'Dick');
         });
 
         it('User exists and return 400', async () => {
