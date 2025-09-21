@@ -3,7 +3,7 @@ const { expect } = require('chai');
 
 const servidor = 'http://localhost:3000';
 
-describe('User Controller', () => {
+describe('User External', () => {
     describe('POST /users/register', () => {
         it('Without password and return 400', async () => {
             const response = await request(servidor)
@@ -99,6 +99,28 @@ describe('User Controller', () => {
 
             expect(response.status).to.equal(401);
             expect(response.body).to.have.property('message', 'Credenciais inválidas');
+        });
+    });
+
+    describe('GET /users/:username', () => {
+        it('User not exist and return 404', async () => {
+            const user = { username: "Clark", password: "superman" };
+
+            const response = await request(servidor)
+                .get(`/users/${user.username}`);
+
+            expect(response.status).to.equal(404);
+            expect(response.body).to.have.property('message', 'Usuário não encontrado');
+        });
+
+        it('Find username successfully and return 200', async () => {
+            const user = { username: "Bruce", password: "batman" };
+
+            const response = await request(servidor)
+                .get(`/users/${user.username}`);
+
+            expect(response.status).to.equal(200);
+            expect(response.body).to.have.property('username', user.username);
         });
     });
 });
