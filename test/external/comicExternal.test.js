@@ -80,7 +80,31 @@ describe('User Controller', () => {
                 });
 
             expect(response.status).to.equal(400);
-            expect(response.body).to.have.property('message', 'Revista já existe');
+            expect(response.body).to.have.property('message', 'Revista já registrada');
+        });
+
+        it('Register comic without name and return 400', async () => {
+            const responseLogin = await request(servidor)
+                .post('/users/login')
+                .send({
+                    username: "Bruce",
+                    password: "batman"
+                });
+
+            const token = responseLogin.body.token;
+
+            const response = await request(servidor)
+                .post('/comics/register')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    publisher: "Panini",
+                    licensor: "DC",
+                    genre: "Super Hero",
+                    price: 19.90
+                });
+
+            expect(response.status).to.equal(400);
+            expect(response.body).to.have.property('message', 'Todos os campos são obrigatórios');
         });
     });
 });
