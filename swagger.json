@@ -108,6 +108,117 @@
         }
       }
     }
+      ,
+      "/artist-roles": {
+        "post": {
+          "summary": "Cadastrar função de artista",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "description": { "type": "string" }
+                  },
+                  "required": ["name", "description"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": { "description": "Função cadastrada" },
+            "400": { "description": "Dados inválidos" }
+          }
+        },
+        "get": {
+          "summary": "Listar todas as funções de artista",
+          "responses": {
+            "200": { "description": "Lista de funções" }
+          }
+        }
+      },
+      "/artist-roles/{id}": {
+        "put": {
+          "summary": "Editar função de artista",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "description": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Função editada" },
+            "404": { "description": "Função não encontrada" }
+          }
+        },
+        "delete": {
+          "summary": "Deletar função de artista",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "204": { "description": "Função deletada" },
+            "404": { "description": "Função não encontrada" }
+          }
+        }
+        },
+        "/artist-roles/id/{id}": {
+          "get": {
+            "summary": "Consultar função de artista por id",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": { "type": "string" }
+              }
+            ],
+            "responses": {
+              "200": { "description": "Função encontrada" },
+              "404": { "description": "Função não encontrada" }
+            }
+          }
+        },
+        "/artist-roles/name/{name}": {
+          "get": {
+            "summary": "Consultar função de artista por nome",
+            "parameters": [
+              {
+                "name": "name",
+                "in": "path",
+                "required": true,
+                "schema": { "type": "string" }
+              }
+            ],
+            "responses": {
+              "200": { "description": "Função encontrada" },
+              "404": { "description": "Função não encontrada" }
+            }
+          }
+      }
   },
   "components": {
     "securitySchemes": {
