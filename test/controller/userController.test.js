@@ -210,4 +210,44 @@ describe('User Controller', () => {
             sinon.restore();
         });
     });
+
+    describe('GET /users/:username', () => {
+        it('User not exist and return 404', async () => {
+            const user = { username: "Clark", password: "superman" };
+
+            const response = await request(app)
+                .get(`/users/${user.username}`);
+
+            expect(response.status).to.equal(404);
+            expect(response.body).to.have.property('message', 'Usuário não encontrado');
+        });
+
+        it('Find username successfully and return 200', async () => {
+            const user = { username: "Bruce", password: "batman" };
+
+            const response = await request(app)
+                .get(`/users/${user.username}`);
+
+            expect(response.status).to.equal(200);
+            expect(response.body).to.have.property('username', user.username);
+        });
+
+        it('Using mocks: Find username successfully and return 200', async () => {
+            const transferServiceMock = sinon.stub(userService, 'getUser')
+            transferServiceMock.returns({
+                username: "Bruce",
+                password: "batman"
+            });
+
+            const user = { username: "Bruce", password: "batman" };
+
+            const response = await request(app)
+                .get(`/users/${user.username}`);
+
+            expect(response.status).to.equal(200);
+            expect(response.body).to.have.property('username', user.username);
+
+            sinon.restore();
+        });
+    });
 });
