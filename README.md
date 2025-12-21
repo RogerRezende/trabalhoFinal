@@ -54,6 +54,161 @@ swagger.json         # Documentação Swagger
 
 - O arquivo `app.js` pode ser importado diretamente para testes automatizados (ex: Supertest).
 
+## Testes de Performance
+
+- Foi utilizado o framework K6 para os testes de performance e alguns conceitos eram necessários que fossem empregados
+
+1. **Thresholds**
+O código abaixo está armazenado no arquivo test/k6/login.test.js e demontra o uso do conceito.
+
+\`\`\`javascript
+thresholds: { 
+        http_req_duration: ['p(90)<=4']
+    }
+\`\`\`
+
+2. **Checks**
+O código abaixo está armazenado no arquivo test/k6/login.test.js e demontra o uso do conceito.
+
+\`\`\`javascript
+//em relação ao registro de um usuário
+check(responseRegister, { 'register status is 201': (responseRegister) => responseRegister.status === 201 });
+
+//em relação ao login de um usuário
+check(responseLogin, { 'login status is 200': (responseLogin) => responseLogin.status === 200 });
+\`\`\`
+
+3. **Helpers**
+O código abaixo está armazenado no arquivo test/k6/login.test.js e demontra o uso do conceito, onde o código de desenvolvimento está no arquivo test/k6/helpers/usernameGenerator.js.
+
+\`\`\`javascript
+//função que foi chamada e que foi criada na pasta helper
+let username = generateRandomUsername();
+\`\`\`
+
+\`\`\`javascript
+//função que foi desenvolvida na pasta helper e foi chamada de usernameGenerator
+function generateRandomUsername() {
+    const adjectives = ["Quick", "Lazy", "Happy", "Sad", "Brave", "Clever", "Witty", "Kind"];
+    const nouns = ["Fox", "Dog", "Cat", "Bear", "Lion", "Tiger", "Wolf", "Eagle"];
+    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+    const randomNumber = Math.floor(1000 + Math.random() * 9000); // Random 4-digit number
+
+    return `${randomAdjective}${randomNoun}${randomNumber}`;
+}
+
+module.exports = generateRandomUsername;    
+\`\`\`
+
+O código abaixo está armazenado no arquivo test/k6/login.test.js e demontra o uso do conceito, onde o código de desenvolvimento está no arquivo test/k6/helpers/login.js.
+
+\`\`\`javascript
+//função que foi chamada e que foi criada na pasta helper
+let responseLogin = login(username, password);
+\`\`\`
+
+\`\`\`javascript
+//função que foi desenvolvida na pasta helper e foi chamada de login
+import http from 'k6/http';
+
+function login(username, password) {
+    let responseLogin = http.post(
+        'http://localhost:3000/users/login', 
+        JSON.stringify({ 
+            username: username, 
+            password: password 
+        }),
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+    );
+    return responseLogin;
+}
+
+export { login };    
+\`\`\`
+
+4. **Trends**
+O código abaixo está armazenado no arquivo test/k6/login.test.js e demontra o uso do conceito.
+
+\`\`\`javascript
+//foi criado o nome da trend
+const loginTrend = new Trend('login_duration');
+
+//foi criada a regra da trend para a geração de uma nova métrica
+loginTrend.add(responseLogin.timings.duration);
+\`\`\`
+
+5. **Stages**
+O código abaixo está armazenado no arquivo test/k6/login.test.js e demontra o uso do conceito.
+
+\`\`\`javascript
+//estágios criados para o andamento do teste de performance
+stages: [
+        { duration: '10s', target: 10 },
+        { duration: '10s', target: 20 },
+        { duration: '10s', target: 30 },
+        { duration: '10s', target: 20 },
+        { duration: '10s', target: 10 },
+        { duration: '10s', target: 0 },
+    ],
+\`\`\`
+
+6. **Reaproveitamento de Resposta**
+\`\`\`javascript
+thresholds: { 
+        http_req_duration: ['p(90)<=4']
+    }
+\`\`\`
+
+7. **Uso de Token de Autenticação**
+\`\`\`javascript
+thresholds: { 
+        http_req_duration: ['p(90)<=4']
+    }
+\`\`\`
+
+8. **Data-Driven Testing**
+\`\`\`javascript
+thresholds: { 
+        http_req_duration: ['p(90)<=4']
+    }
+\`\`\`
+
+9. **Groups**
+O código abaixo está armazenado no arquivo test/k6/login.test.js e demontra o uso do conceito.
+
+\`\`\`javascript
+//group do registro de usuário
+group('Register User', function() {
+        let responseRegister = http.post(
+            'http://localhost:3000/users/register', 
+            JSON.stringify({ 
+                username: username, 
+                password: password 
+            }),
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        check(responseRegister, { 'register status is 201': (responseRegister) => responseRegister.status === 201 });
+    });
+
+//group do login de usuário
+group('Login User', function() {
+        let responseLogin = login(username, password);
+        check(responseLogin, { 'login status is 200': (responseLogin) => responseLogin.status === 200 });
+        let token = responseLogin.json('token');
+        loginTrend.add(responseLogin.timings.duration);
+    });
+\`\`\`
+
+
 ---
 
 API criada para fins didáticos e de automação de testes.

@@ -5,6 +5,7 @@ const { expect } = require('chai');
 const app = require('../../app');
 
 const userService = require('../../services/userService');
+const generateRandomUsername = require('../k6/helpers/usernameGenerator');
 
 describe('User Controller', () => {
     describe('POST /users/register', () => {
@@ -248,6 +249,13 @@ describe('User Controller', () => {
             expect(response.body).to.have.property('username', user.username);
 
             sinon.restore();
+        });
+    });
+
+    describe('Username Generator', () => {
+        it('should generate a random username', () => {
+            const username = generateRandomUsername();
+            expect(username).to.match(/^[A-Za-z]+[A-Za-z]+\d{4}$/); // Matches pattern AdjectiveNoun1234
         });
     });
 });
