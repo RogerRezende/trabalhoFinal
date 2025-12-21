@@ -61,11 +61,11 @@ swagger.json         # Documentação Swagger
 1. **Thresholds**
 O código abaixo está armazenado no arquivo test/k6/login.test.js e demontra o uso do conceito.
 
-\`\`\`javascript
+```
 thresholds: { 
         http_req_duration: ['p(90)<=4']
     }
-\`\`\`
+```
 
 2. **Checks**
 O código abaixo está armazenado no arquivo test/k6/login.test.js e demontra o uso do conceito.
