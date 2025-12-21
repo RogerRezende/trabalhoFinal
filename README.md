@@ -158,24 +158,50 @@ stages: [
 ```
 
 6. **Reaproveitamento de Resposta**
+O código abaixo está armazenado no arquivo test/k6/comics.register.test.js e demontra o uso do conceito.
+
 ```
-thresholds: { 
-        http_req_duration: ['p(90)<=4']
-    }
+//Nessa parte pegamos a parte que iremos reaproveitar
+let token = responseLogin.json('token');
+
+//Nessa parte recebemos o valor que foi reaproveitado
+'Authorization': `Bearer ${token}`,
 ```
 
 7. **Uso de Token de Autenticação**
+O código abaixo está armazenado no arquivo test/k6/comics.register.test.js e demontra o uso do conceito.
+
 ```
-thresholds: { 
-        http_req_duration: ['p(90)<=4']
-    }
+//Aqui recebemos o valor do token de autenticação
+let token = responseLogin.json('token');
+
+//Para a realização desse método, foi necessário o token de autenticação
+let responseComics = http.post(
+        'http://localhost:3000/comics/register', 
+        JSON.stringify({ 
+            name: comic, 
+            publisher: "Panini Comics",
+            licensor: "DC Comics",
+            genre: "Super Heróis",
+            price: 22.90
+        }),
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        }
+    );
+    check(responseComics, { 'register comic status is 201': (responseComics) => responseComics.status === 201 });
 ```
 
 8. **Data-Driven Testing**
+O código abaixo está armazenado no arquivo test/k6/comics.register.test.js e demontra o uso do conceito.
+
 ```
-thresholds: { 
-        http_req_duration: ['p(90)<=4']
-    }
+const data = new SharedArray('users', function() {
+    return JSON.parse(open('./data/login.data.json'));
+});
 ```
 
 9. **Groups**
